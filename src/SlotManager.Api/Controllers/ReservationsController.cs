@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SlotManager.Api.Models;
+using SlotManager.Api.Commands;
+using SlotManager.Api.DTO;
+using SlotManager.Api.Entities;
 using SlotManager.Api.Services;
 
 namespace SlotManager.Api.Controllers
@@ -12,10 +14,10 @@ namespace SlotManager.Api.Controllers
         private readonly ReservationService _service = new();
 
         [HttpGet]
-        public ActionResult<IEnumerable<Reservation>> Get() => Ok(_service.GetAll());
+        public ActionResult<IEnumerable<ReservationDto>> Get() => Ok(_service.GetAllWeekly());
 
-        [HttpGet("{id:int}")]
-        public ActionResult<Reservation> Get(int id)
+        [HttpGet("{id:guid}")]
+        public ActionResult<Reservation> Get(Guid id)
         {
             var reservation = _service.Get(id);
 
@@ -28,9 +30,9 @@ namespace SlotManager.Api.Controllers
         }
 
         [HttpPost]
-        public ActionResult Post(Reservation reservation)
+        public ActionResult Post(CreateReservation command)
         {
-            var newReservationId = _service.Create(reservation);
+            var newReservationId = _service.Create(command with { ReservationId = Guid.NewGuid()});
 
             if(newReservationId is null)
             {
@@ -40,13 +42,10 @@ namespace SlotManager.Api.Controllers
             return CreatedAtAction(nameof(Get), new { id = newReservationId }, null);
         }
 
-        [HttpPut("{id:int}")]
-        public ActionResult Put(int id, Reservation reservation)
+        [HttpPut("{id:guid}")]
+        public ActionResult Put(Guid id, ChangeReservationLicensePlate command)
         {
-            reservation.Id = id;
-            var successed = _service.Update( reservation);
-
-            if (successed)
+            if (_service.Update(command with { ReservationId = id}))
             {
                 return NoContent();
             }
@@ -54,12 +53,10 @@ namespace SlotManager.Api.Controllers
             return NotFound();
         }
 
-        [HttpDelete("{id:int}")]
-        public ActionResult Delete(int id)
+        [HttpDelete("{id:guid}")]
+        public ActionResult Delete(Guid id)
         {
-            var successed = _service.Delete(id);
-
-            if (successed)
+            if(_service.Delete(new DeleteReservation(id)))
             {
                 return NoContent();
             }

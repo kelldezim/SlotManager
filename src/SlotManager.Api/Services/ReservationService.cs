@@ -1,86 +1,107 @@
-﻿using SlotManager.Api.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SlotManager.Api.Commands;
+using SlotManager.Api.DTO;
+using SlotManager.Api.Entities;
 
 namespace SlotManager.Api.Services
 {
     public class ReservationService
     {
-        private static int _id = 1;
-        private static readonly List<Reservation> _reservations = new();
-        private static readonly List<string> _parkingSlots = new()
+        private static readonly List<WeeklyParkingSpot> WeeklyParkingSpots = new()
         {
-            "P1",
-            "P2",
-            "P3",
-            "P4",
-            "P5"
+            new WeeklyParkingSpot(Guid.Parse("00000000-0000-0000-0000-000000000001"), DateTime.UtcNow, DateTime.UtcNow.AddDays(7), "P1"),
+            new WeeklyParkingSpot(Guid.Parse("00000000-0000-0000-0000-000000000002"), DateTime.UtcNow, DateTime.UtcNow.AddDays(7), "P2"),
+            new WeeklyParkingSpot(Guid.Parse("00000000-0000-0000-0000-000000000003"), DateTime.UtcNow, DateTime.UtcNow.AddDays(7), "P3"),
+            new WeeklyParkingSpot(Guid.Parse("00000000-0000-0000-0000-000000000004"), DateTime.UtcNow, DateTime.UtcNow.AddDays(7), "P4"),
+            new WeeklyParkingSpot(Guid.Parse("00000000-0000-0000-0000-000000000005"), DateTime.UtcNow, DateTime.UtcNow.AddDays(7), "P5")
         };
 
-        public Reservation Get(int id)
+        public ReservationDto Get(Guid id)
         {
-            return _reservations.SingleOrDefault(x => x.Id == id);
+            return GetAllWeekly().SingleOrDefault(x => x.Id == id);
         }
 
-        public IEnumerable<Reservation> GetAll()
+        public IEnumerable<ReservationDto> GetAllWeekly()
         {
-            return _reservations;
+            return WeeklyParkingSpots.SelectMany(x => x.Reservations)
+                .Select(x => new ReservationDto
+                {
+                    Id = x.Id,
+                    ParkingSpotId = x.ParkingSpotId,
+                    EmployeeName = x.EmployeeName,
+                    Date = x.Date
+                });
         }
 
-        public int? Create(Reservation reservation)
+        public Guid? Create(CreateReservation command)
         {
-            if (_parkingSlots.All(x => x != reservation.ParkingSpotName))
+            var weeklyParkingSpot = WeeklyParkingSpots.SingleOrDefault(x => x.Id == command.ParkingSpotId);
+
+            if(weeklyParkingSpot == null)
             {
                 return default;
             }
 
-            reservation.Date = DateTime.UtcNow.AddDays(1).Date;
+            var reservation = new Reservation(command.ReservationId,
+                                              command.ParkingSpotId,
+                                              command.EmployeeName,
+                                              command.LicensePlate,
+                                              command.Date);
 
-            var reservationAlreadyExists = _reservations.Any(x => x.ParkingSpotName == reservation.ParkingSpotName
-                                                                  && x.Date.Date == reservation.Date.Date);
-
-            if (reservationAlreadyExists)
-            {
-                return default;
-            }
-
-            reservation.Id = _id;
-
-            _id++;
-            _reservations.Add(reservation);
+            weeklyParkingSpot.AddReservation(reservation);
 
             return reservation.Id;
         }
 
-        public bool Update(Reservation reservation)
+        public bool Update(ChangeReservationLicensePlate command)
         {
-            var existingReservation = _reservations.SingleOrDefault(x => x.Id == reservation.Id);
+            var weeklyParkingSpot = GetWeeklyParkingSpotByReservation(command.ReservationId);
+
+            if(weeklyParkingSpot is null)
+            {
+                return false;
+            }
+
+            var existingReservation = weeklyParkingSpot.Reservations.SingleOrDefault(x => x.Id == command.ReservationId);
 
             if (existingReservation is null)
             {
                 return false;
             }
 
-            existingReservation.LicensePlate = reservation.LicensePlate;
+            if (existingReservation.Date <= DateTime.UtcNow)
+            {
+                return false;
+            }
+
+            existingReservation.ChangeLicencePlate(command.LicensePlate);
 
             return true;
         }
 
-        public bool Delete(int id)
+        public bool Delete(DeleteReservation command)
         {
-            var existingReservation = _reservations.SingleOrDefault(x => x.Id == id);
+            var weeklyParkingSpot = GetWeeklyParkingSpotByReservation(command.ReservationId);
+
+            if(weeklyParkingSpot is null)
+            {
+                return false;
+            }
+
+            var existingReservation = weeklyParkingSpot.Reservations.SingleOrDefault(x => x.Id == command.ReservationId);
 
             if (existingReservation is null)
             {
                 return false;
             }
 
-            _reservations.Remove(existingReservation);
+            weeklyParkingSpot.RemoveReservation(command.ReservationId);
 
             return true;
+        }
+
+        private WeeklyParkingSpot GetWeeklyParkingSpotByReservation(Guid reservationId)
+        {
+            return WeeklyParkingSpots.SingleOrDefault(x => x.Reservations.Any(r => r.Id == reservationId));
         }
     }
 }
