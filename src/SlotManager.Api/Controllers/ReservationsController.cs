@@ -1,42 +1,70 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SlotManager.Api.Models;
+using SlotManager.Api.Services;
 
 namespace SlotManager.Api.Controllers
 {
     [ApiController]
     [Route("reservations")]
-    
+
     public class ReservationsController : ControllerBase
     {
-        private int _id = 1;
-        private readonly List<Reservation> _reservations = new();
-        private readonly List<string> _parkingSlots = new()
-        {
-            "P1",
-            "P2",
-            "P3",
-            "P4",
-            "P5"
-        };
+        private readonly ReservationService _service = new();
 
         [HttpGet]
-        public void Get()
-        {
+        public ActionResult<IEnumerable<Reservation>> Get() => Ok(_service.GetAll());
 
+        [HttpGet("{id:int}")]
+        public ActionResult<Reservation> Get(int id)
+        {
+            var reservation = _service.Get(id);
+
+            if (reservation is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(reservation);
         }
 
         [HttpPost]
-        public void Post(Reservation reservation)
+        public ActionResult Post(Reservation reservation)
         {
-            if(_parkingSlots.All(x => x != reservation.ParkingSpotName))
+            var newReservationId = _service.Create(reservation);
+
+            if(newReservationId is null)
             {
-                HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
-                return;
+                return BadRequest();
             }
 
-            reservation.Id = _id;
-            reservation.Date = DateTime.UtcNow.AddDays(1).Date;
-            _id++;
+            return CreatedAtAction(nameof(Get), new { id = newReservationId }, null);
+        }
+
+        [HttpPut("{id:int}")]
+        public ActionResult Put(int id, Reservation reservation)
+        {
+            reservation.Id = id;
+            var successed = _service.Update( reservation);
+
+            if (successed)
+            {
+                return NoContent();
+            }
+
+            return NotFound();
+        }
+
+        [HttpDelete("{id:int}")]
+        public ActionResult Delete(int id)
+        {
+            var successed = _service.Delete(id);
+
+            if (successed)
+            {
+                return NoContent();
+            }
+
+            return NotFound();
         }
     }
 }
