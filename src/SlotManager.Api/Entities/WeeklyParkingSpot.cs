@@ -1,4 +1,5 @@
 ﻿using SlotManager.Api.Exceptions;
+using SlotManager.Api.ValueObjects;
 
 namespace SlotManager.Api.Entities
 {
@@ -6,42 +7,40 @@ namespace SlotManager.Api.Entities
     {
         private readonly HashSet<Reservation> _reservations = new();
 
-        public WeeklyParkingSpot(Guid id, DateTime from, DateTime to, string name)
+        public WeeklyParkingSpot(ParkingSpotId id, Week week, ParkingSpotName name)
         {
             Id = id;
-            From = from;
-            To = to;
+            Week = week;
             Name = name;
         }
 
-        public Guid Id { get; }
-        public DateTime From { get; }
-        public DateTime To { get; }
-        public string Name { get; }
+        public ParkingSpotId Id { get; }
+        public Week Week { get; set; }
+        public ParkingSpotName Name { get; }
         public IEnumerable<Reservation> Reservations => _reservations;
 
-        public void AddReservation(Reservation reservation)
+        public void AddReservation(Reservation reservation, Date now)
         {
-            var isInvalidDate = reservation.Date.Date < From || 
-                                reservation.Date.Date > To || 
-                                reservation.Date.Date < DateTime.UtcNow.Date;
+            var isInvalidDate = reservation.Date < Week.From || 
+                                reservation.Date > Week.To || 
+                                reservation.Date < now;
 
             if(isInvalidDate)
             {
-                throw new InvalidReservationDateException(reservation.Date);
+                throw new InvalidReservationDateException(reservation.Date.Value.Date);
             }
 
-            var reservationAlreadyExist = _reservations.Any(x => x.Date.Date == reservation.Date.Date);
+            var reservationAlreadyExist = _reservations.Any(x => x.Date == reservation.Date);
 
             if (reservationAlreadyExist)
             {
-                throw new ParkingSpotAlreadyReservedException(reservation.Date, this.Name);
+                throw new ParkingSpotAlreadyReservedException(reservation.Date.Value.Date, this.Name);
             }
 
             _reservations.Add(reservation);
         }
 
-        public void RemoveReservation(Guid id)
+        public void RemoveReservation(ReservationId id)
         {
             var reservation = _reservations.SingleOrDefault(x => x.Id == id);
 

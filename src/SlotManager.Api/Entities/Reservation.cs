@@ -1,10 +1,14 @@
-﻿using SlotManager.Api.Exceptions;
+﻿using SlotManager.Api.ValueObjects;
 
 namespace SlotManager.Api.Entities
 {
     public class Reservation
     {
-        public Reservation(Guid id, Guid parkingSpotId, string employeeName, string licensePlate, DateTime date)
+        public Reservation(ReservationId id,
+                           ParkingSpotId parkingSpotId,
+                           EmployeeName employeeName,
+                           LicensePlate licensePlate,
+                           Date date)
         {
             Id = id;
             ParkingSpotId = parkingSpotId;
@@ -13,20 +17,15 @@ namespace SlotManager.Api.Entities
             Date = date;
         }
 
-        public Guid Id { get; }
-        public Guid ParkingSpotId { get; private set; }
-        public string EmployeeName { get; private set; }
-        public string LicensePlate { get; private set; }
-        public DateTime Date { get; private set; }
+        public ReservationId Id { get; }
+        public ParkingSpotId ParkingSpotId { get; private set; }
+        public EmployeeName EmployeeName { get; private set; }
+        public LicensePlate LicensePlate { get; private set; }
+        public Date Date { get; private set; }
 
-        public void ChangeLicencePlate(string newLicencePlate)
+        public LicensePlate ChangeLicencePlate(LicensePlate licensePlate)
         {
-            if (string.IsNullOrWhiteSpace(newLicencePlate))
-            {
-                throw new EmptyLicencePlateException();
-            }
-
-            LicensePlate = newLicencePlate;
+            return LicensePlate = licensePlate;
         }
 
     }
