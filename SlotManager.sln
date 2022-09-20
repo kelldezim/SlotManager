@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SlotManager.Api", "src\Slot
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C34A9670-1116-402A-9450-0F983ABDD2CA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlotManager.Tests.Unit", "SlotManager.Tests.Unit\SlotManager.Tests.Unit.csproj", "{E79C788F-5655-49B9-989F-DA7AA1A1FF55}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,12 +21,17 @@ Global
 		{7AC3833B-0977-4B6F-8405-FAE076CEC66C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7AC3833B-0977-4B6F-8405-FAE076CEC66C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7AC3833B-0977-4B6F-8405-FAE076CEC66C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E79C788F-5655-49B9-989F-DA7AA1A1FF55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E79C788F-5655-49B9-989F-DA7AA1A1FF55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E79C788F-5655-49B9-989F-DA7AA1A1FF55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E79C788F-5655-49B9-989F-DA7AA1A1FF55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7AC3833B-0977-4B6F-8405-FAE076CEC66C} = {C45ECF04-C1D2-41A5-B7F6-3B27E561ACAD}
+		{E79C788F-5655-49B9-989F-DA7AA1A1FF55} = {C34A9670-1116-402A-9450-0F983ABDD2CA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C77324F7-CAFD-478B-ADE9-BF442BA3C057}
