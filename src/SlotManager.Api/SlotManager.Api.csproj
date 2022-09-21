@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
+    <ProjectReference Include="..\..\SlotManager.Infrastructure\SlotManager.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

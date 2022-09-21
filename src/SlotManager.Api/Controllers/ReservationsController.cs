@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SlotManager.Api.Commands;
-using SlotManager.Api.DTO;
-using SlotManager.Api.Entities;
-using SlotManager.Api.Services;
-using SlotManager.Api.ValueObjects;
+using SlotManager.Application.Commands;
+using SlotManager.Application.DTO;
+using SlotManager.Application.Services;
+using SlotManager.Core.Entities;
 
 namespace SlotManager.Api.Controllers
 {
@@ -12,23 +11,20 @@ namespace SlotManager.Api.Controllers
 
     public class ReservationsController : ControllerBase
     {
-        private static readonly Clock Clock = new Clock();
-        private static readonly ReservationService _service = new(new List<WeeklyParkingSpot>
+        private readonly IReservationService _reservationService;
+
+        public ReservationsController(IReservationService reservationService)
         {
-            new WeeklyParkingSpot(Guid.Parse("00000000-0000-0000-0000-000000000001"), new Week(Clock.Current()), "P1"),
-            new WeeklyParkingSpot(Guid.Parse("00000000-0000-0000-0000-000000000002"), new Week(Clock.Current()), "P2"),
-            new WeeklyParkingSpot(Guid.Parse("00000000-0000-0000-0000-000000000003"), new Week(Clock.Current()), "P3"),
-            new WeeklyParkingSpot(Guid.Parse("00000000-0000-0000-0000-000000000004"), new Week(Clock.Current()), "P4"),
-            new WeeklyParkingSpot(Guid.Parse("00000000-0000-0000-0000-000000000005"), new Week(Clock.Current()), "P5")
-        });
+            _reservationService = reservationService;
+        }
 
         [HttpGet]
-        public ActionResult<IEnumerable<ReservationDto>> Get() => Ok(_service.GetAllWeekly());
+        public ActionResult<IEnumerable<ReservationDto>> Get() => Ok(_reservationService.GetAllWeekly());
 
         [HttpGet("{id:guid}")]
         public ActionResult<Reservation> Get(Guid id)
         {
-            var reservation = _service.Get(id);
+            var reservation = _reservationService.Get(id);
 
             if (reservation is null)
             {
@@ -41,7 +37,7 @@ namespace SlotManager.Api.Controllers
         [HttpPost]
         public ActionResult Post(CreateReservation command)
         {
-            var newReservationId = _service.Create(command with { ReservationId = Guid.NewGuid()});
+            var newReservationId = _reservationService.Create(command with { ReservationId = Guid.NewGuid()});
 
             if(newReservationId is null)
             {
@@ -54,7 +50,7 @@ namespace SlotManager.Api.Controllers
         [HttpPut("{id:guid}")]
         public ActionResult Put(Guid id, ChangeReservationLicensePlate command)
         {
-            if (_service.Update(command with { ReservationId = id}))
+            if (_reservationService.Update(command with { ReservationId = id}))
             {
                 return NoContent();
             }
@@ -65,7 +61,7 @@ namespace SlotManager.Api.Controllers
         [HttpDelete("{id:guid}")]
         public ActionResult Delete(Guid id)
         {
-            if(_service.Delete(new DeleteReservation(id)))
+            if(_reservationService.Delete(new DeleteReservation(id)))
             {
                 return NoContent();
             }

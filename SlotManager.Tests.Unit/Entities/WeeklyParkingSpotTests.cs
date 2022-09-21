@@ -1,7 +1,7 @@
 ﻿using Shouldly;
-using SlotManager.Api.Entities;
-using SlotManager.Api.Exceptions;
-using SlotManager.Api.ValueObjects;
+using SlotManager.Core.Entities;
+using SlotManager.Core.Exceptions;
+using SlotManager.Core.ValueObjects;
 using System;
 using Xunit;
 
