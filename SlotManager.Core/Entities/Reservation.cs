@@ -17,7 +17,7 @@ namespace SlotManager.Core.Entities
             Date = date;
         }
 
-        public ReservationId Id { get; }
+        public ReservationId Id { get; private set; }
         public ParkingSpotId ParkingSpotId { get; private set; }
         public EmployeeName EmployeeName { get; private set; }
         public LicensePlate LicensePlate { get; private set; }

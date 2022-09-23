@@ -52,6 +52,7 @@ namespace SlotManager.Application.Services
                                               new Date(command.Date));
 
             weeklyParkingSpot.AddReservation(reservation, new Date(_clock.Current()));
+            _weeklyParkingSpotRepository.Update(weeklyParkingSpot);
 
             return reservation.Id;
         }
@@ -79,6 +80,7 @@ namespace SlotManager.Application.Services
             }
 
             existingReservation.ChangeLicencePlate(command.LicensePlate);
+            _weeklyParkingSpotRepository.Update(weeklyParkingSpot);
 
             return true;
         }
@@ -101,6 +103,7 @@ namespace SlotManager.Application.Services
             }
 
             weeklyParkingSpot.RemoveReservation(command.ReservationId);
+            _weeklyParkingSpotRepository.Delete(weeklyParkingSpot);
 
             return true;
         }

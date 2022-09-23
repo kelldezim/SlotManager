@@ -14,9 +14,9 @@ namespace SlotManager.Core.Entities
             Name = name;
         }
 
-        public ParkingSpotId Id { get; }
-        public Week Week { get; set; }
-        public ParkingSpotName Name { get; }
+        public ParkingSpotId Id { get; private set; }
+        public Week Week { get; private set; }
+        public ParkingSpotName Name { get; private set; }
         public IEnumerable<Reservation> Reservations => _reservations;
 
         public void AddReservation(Reservation reservation, Date now)

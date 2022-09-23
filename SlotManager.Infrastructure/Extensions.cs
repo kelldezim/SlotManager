@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using SlotManager.Core.Repositories;
-using SlotManager.Infrastructure.DAL.Repositories;
+using SlotManager.Infrastructure.DAL;
 using SlotManager.Infrastructure.Time;
 using System.Runtime.CompilerServices;
 
@@ -11,8 +10,10 @@ namespace SlotManager.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
-            services.AddSingleton<IClock, Clock>();
-            services.AddSingleton<IWeeklyParkingSpotRepository, InMemoryWeeklyParkingSpotRepository>();
+            services
+                .AddMSQL()
+                .AddSingleton<IClock, Clock>();
+                //.AddSingleton<IWeeklyParkingSpotRepository, InMemoryWeeklyParkingSpotRepository>()              
 
             return services;
         }

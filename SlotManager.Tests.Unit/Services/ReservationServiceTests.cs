@@ -7,7 +7,7 @@ using SlotManager.Core.Repositories;
 using SlotManager.Application.Commands;
 using SlotManager.Application.Services;
 using SlotManager.Infrastructure.Time;
-using SlotManager.Infrastructure.Repositories;
+using SlotManager.Infrastructure.DAL.Repositories;
 
 namespace SlotManager.Tests.Unit.Services
 {
