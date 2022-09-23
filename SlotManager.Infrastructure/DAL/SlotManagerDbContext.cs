@@ -3,7 +3,7 @@ using SlotManager.Core.Entities;
 
 namespace SlotManager.Infrastructure.DAL
 {
-    public class SlotManagerDbContext : DbContext
+    internal class SlotManagerDbContext : DbContext
     {
         //const string _connectionString = "Data Source=LAPTOP-KHD0U7M8\\SQLEXPRESS;Initial Catalog = SlotManager; Integrated Security = True";
         public DbSet<Reservation> Reservations { get; set; }

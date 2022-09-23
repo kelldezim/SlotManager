@@ -12,6 +12,7 @@ namespace SlotManager.Infrastructure.DAL
             const string connectionString = "Data Source=LAPTOP-KHD0U7M8\\SQLEXPRESS;Initial Catalog = SlotManager; Integrated Security = True";
             services.AddDbContext<SlotManagerDbContext>(x => x.UseSqlServer(connectionString));
             services.AddScoped<IWeeklyParkingSpotRepository, SqlWeeklyParkingSpotRepository>();
+            services.AddHostedService<DatabaseInitializer>();
 
             return services;
         }
