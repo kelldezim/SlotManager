@@ -23,28 +23,33 @@ namespace SlotManager.Infrastructure.DAL.Repositories
             };
         }
 
-        public void Add(WeeklyParkingSpot weeklyParkingSpot)
+        public Task AddAsync(WeeklyParkingSpot weeklyParkingSpot)
         {
             _weeklyParkingSpots.Add(weeklyParkingSpot);
+
+            return Task.CompletedTask;
         }
 
-        public void Delete(WeeklyParkingSpot weeklyParkingSpot)
+        public Task DeleteAsync(WeeklyParkingSpot weeklyParkingSpot)
         {
             _weeklyParkingSpots.Remove(weeklyParkingSpot);
+
+            return Task.CompletedTask;
         }
 
-        public WeeklyParkingSpot Get(ParkingSpotId id)
+        public Task<WeeklyParkingSpot> GetAsync(ParkingSpotId id)
         {
-            return _weeklyParkingSpots.SingleOrDefault(x => x.Id == id);
+            return Task.FromResult(_weeklyParkingSpots.SingleOrDefault(x => x.Id == id));
         }
 
-        public IEnumerable<WeeklyParkingSpot> GetAll()
+        public Task<IEnumerable<WeeklyParkingSpot>> GetAllAsync()
         {
-            return _weeklyParkingSpots;
+            return Task.FromResult(_weeklyParkingSpots.AsEnumerable());
         }
 
-        public void Update(WeeklyParkingSpot weeklyParkingSpot)
+        public Task UpdateAsync(WeeklyParkingSpot weeklyParkingSpot)
         {
+            return Task.CompletedTask;
         }
     }
 }

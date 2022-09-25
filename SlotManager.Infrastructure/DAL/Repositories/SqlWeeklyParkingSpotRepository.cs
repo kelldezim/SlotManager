@@ -2,11 +2,6 @@
 using SlotManager.Core.Entities;
 using SlotManager.Core.Repositories;
 using SlotManager.Core.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SlotManager.Infrastructure.DAL.Repositories
 {
@@ -19,36 +14,38 @@ namespace SlotManager.Infrastructure.DAL.Repositories
             _dbContext = dbContext;
         }
 
-        public void Add(WeeklyParkingSpot weeklyParkingSpot)
+        public async Task AddAsync(WeeklyParkingSpot weeklyParkingSpot)
         {
-            _dbContext.Add(weeklyParkingSpot);
-            _dbContext.SaveChanges();
+            await _dbContext.AddAsync(weeklyParkingSpot);
+            await _dbContext.SaveChangesAsync();
         }
 
-        public void Delete(WeeklyParkingSpot weeklyParkingSpot)
+        public async Task DeleteAsync(WeeklyParkingSpot weeklyParkingSpot)
         {
             _dbContext.Remove(weeklyParkingSpot);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
 
-        public WeeklyParkingSpot Get(ParkingSpotId id)
+        public Task<WeeklyParkingSpot> GetAsync(ParkingSpotId id)
         {
               return _dbContext.WeeklyParkingSpots
                             .Include(x => x.Reservations)
-                            .SingleOrDefault(x => x.Id == id);
+                            .SingleOrDefaultAsync(x => x.Id == id);
         }
 
-        public IEnumerable<WeeklyParkingSpot> GetAll()
+        public async Task<IEnumerable<WeeklyParkingSpot>> GetAllAsync()
         {
-            return _dbContext.WeeklyParkingSpots
+            var result = await _dbContext.WeeklyParkingSpots
                             .Include(x => x.Reservations)
-                            .ToList();
+                            .ToListAsync();
+
+            return result.AsEnumerable();
         }
 
-        public void Update(WeeklyParkingSpot weeklyParkingSpot)
+        public async Task UpdateAsync(WeeklyParkingSpot weeklyParkingSpot)
         {
             _dbContext.Update(weeklyParkingSpot);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
     }
 }
