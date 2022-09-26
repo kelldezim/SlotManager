@@ -1,6 +1,6 @@
 ﻿namespace SlotManager.Core.Exceptions
 {
-    public class InvalidParkingSpotNameException : CustomerException
+    public class InvalidParkingSpotNameException : CustomException
     {
         public InvalidParkingSpotNameException() : base("Invalid Parking Spot Name")
         {

@@ -1,6 +1,6 @@
 ﻿namespace SlotManager.Core.Exceptions
 {
-    public class ParkingSpotAlreadyReservedException : CustomerException
+    public class ParkingSpotAlreadyReservedException : CustomException
     {
         public ParkingSpotAlreadyReservedException(DateTime dateTime, string name) : base($"Parking spot: {name} is already reserved at: {dateTime:d}.")
         {

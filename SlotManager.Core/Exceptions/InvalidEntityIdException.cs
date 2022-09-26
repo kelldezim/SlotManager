@@ -1,6 +1,6 @@
 ﻿namespace SlotManager.Core.Exceptions
 {
-    public sealed class InvalidEntityIdException : CustomerException
+    public sealed class InvalidEntityIdException : CustomException
     {
         public object Id { get; }
 
