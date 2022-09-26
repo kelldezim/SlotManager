@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using SlotManager.Core.DomainServices;
+using SlotManager.Core.Policies;
 
 namespace SlotManager.Core
 {
@@ -6,6 +8,11 @@ namespace SlotManager.Core
     {
         public static IServiceCollection AddCore(this IServiceCollection services)
         {
+            services.AddSingleton<IReservationPolicy, RegularEmployeeReservationPolicy>();
+            services.AddSingleton<IReservationPolicy, ManagerReservationPolicy>();
+            services.AddSingleton<IReservationPolicy, BossReservationPolicy>();
+            services.AddSingleton<IParkingReservationService, ParkingReservationService>();
+
             return services;
         }
     }

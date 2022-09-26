@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SlotManager.Core.Abstractions;
 using SlotManager.Infrastructure.DAL;
 using SlotManager.Infrastructure.Exceptions;
 using SlotManager.Infrastructure.Time;

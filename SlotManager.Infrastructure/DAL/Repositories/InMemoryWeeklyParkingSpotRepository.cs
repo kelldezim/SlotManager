@@ -1,7 +1,7 @@
-﻿using SlotManager.Core.Entities;
+﻿using SlotManager.Core.Abstractions;
+using SlotManager.Core.Entities;
 using SlotManager.Core.Repositories;
 using SlotManager.Core.ValueObjects;
-using SlotManager.Infrastructure.Time;
 
 namespace SlotManager.Infrastructure.DAL.Repositories
 {

@@ -1,4 +1,4 @@
-﻿using SlotManager.Infrastructure.Time;
+﻿using SlotManager.Core.Abstractions;
 using System;
 
 namespace SlotManager.Tests.Unit.Shared

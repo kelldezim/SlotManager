@@ -19,7 +19,7 @@ namespace SlotManager.Core.Entities
         public ParkingSpotName Name { get; private set; }
         public IEnumerable<Reservation> Reservations => _reservations;
 
-        public void AddReservation(Reservation reservation, Date now)
+        internal void AddReservation(Reservation reservation, Date now)
         {
             var isInvalidDate = reservation.Date < Week.From || 
                                 reservation.Date > Week.To || 

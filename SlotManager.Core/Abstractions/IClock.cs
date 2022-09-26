@@ -1,4 +1,4 @@
-﻿namespace SlotManager.Infrastructure.Time
+﻿namespace SlotManager.Core.Abstractions
 {
     public interface IClock
     {

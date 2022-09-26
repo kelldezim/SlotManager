@@ -42,6 +42,16 @@ namespace SlotManager.Infrastructure.DAL.Repositories
             return result.AsEnumerable();
         }
 
+        public async Task<IEnumerable<WeeklyParkingSpot>> GetByWeekAsync(Week week)
+        {
+            var result = await _dbContext.WeeklyParkingSpots
+                            .Include(x => x.Reservations)
+                            .Where(x => x.Week == week)
+                            .ToListAsync();
+
+            return result.AsEnumerable();
+        }
+
         public async Task UpdateAsync(WeeklyParkingSpot weeklyParkingSpot)
         {
             _dbContext.Update(weeklyParkingSpot);

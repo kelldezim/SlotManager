@@ -6,9 +6,9 @@ using SlotManager.Tests.Unit.Shared;
 using SlotManager.Core.Repositories;
 using SlotManager.Application.Commands;
 using SlotManager.Application.Services;
-using SlotManager.Infrastructure.Time;
 using SlotManager.Infrastructure.DAL.Repositories;
 using System.Threading.Tasks;
+using SlotManager.Core.Abstractions;
 
 namespace SlotManager.Tests.Unit.Services
 {

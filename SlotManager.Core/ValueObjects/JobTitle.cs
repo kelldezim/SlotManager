@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace SlotManager.Core.ValueObjects
 {
+    //This type of logic could be implement via Enum type but I wanted to stick to Class ValueObject to practise operator implicit declaration
     public sealed class JobTitle
     {
         public string Value { get; }
