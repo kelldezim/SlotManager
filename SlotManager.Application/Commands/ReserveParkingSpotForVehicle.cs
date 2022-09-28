@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SlotManager.Application.Commands
 {
-    public record CreateReservation(Guid ParkingSpotId,
+    public record ReserveParkingSpotForVehicle(Guid ParkingSpotId,
                                     Guid ReservationId,
                                     DateTime Date,
                                     string EmployeeName,

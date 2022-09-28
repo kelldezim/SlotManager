@@ -37,10 +37,10 @@ namespace SlotManager.Api.Controllers
             return Ok(reservation);
         }
 
-        [HttpPost]
-        public async Task<ActionResult> Post(CreateReservation command)
+        [HttpPost("vehicle")]
+        public async Task<ActionResult> Post(ReserveParkingSpotForVehicle command)
         {
-            var newReservationId = await _reservationService.CreateAsync(command with { ReservationId = Guid.NewGuid()});
+            var newReservationId = await _reservationService.ReserveForVehicleAsync(command with { ReservationId = Guid.NewGuid()});
 
             if(newReservationId is null)
             {
@@ -50,10 +50,18 @@ namespace SlotManager.Api.Controllers
             return CreatedAtAction(nameof(Get), new { id = newReservationId }, null);
         }
 
-        [HttpPut("{id:guid}")]
+        [HttpPost("cleaning")]
+        public async Task<ActionResult> Post(ReserveParkingSpotForCleaning command)
+        {
+            await _reservationService.ReserveForCleaningAsync(command);
+
+            return Ok();
+        }
+
+            [HttpPut("{id:guid}")]
         public async Task<ActionResult> Put(Guid id, ChangeReservationLicensePlate command)
         {
-            if (await _reservationService.UpdateAsync(command with { ReservationId = id}))
+            if (await _reservationService.ChangeReservationLicencePlateAsync(command with { ReservationId = id}))
             {
                 return NoContent();
             }

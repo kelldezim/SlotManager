@@ -10,7 +10,7 @@ namespace SlotManager.Tests.Unit.Shared
     {
         public DateTime Current()
         {
-            return new DateTime(2022, 08, 11);
+            return new DateTime(2022, 08, 11, 12, 0 ,0);
         }
     }
 }

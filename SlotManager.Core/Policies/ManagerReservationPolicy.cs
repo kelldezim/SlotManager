@@ -13,7 +13,8 @@ namespace SlotManager.Core.Policies
         public bool CanReserve(IEnumerable<WeeklyParkingSpot> weeklyParkingSpots, EmployeeName employeeName)
         {
             var totalEmployeeReservations = weeklyParkingSpots.SelectMany(x => x.Reservations)
-                                                        .Count(x => x.EmployeeName == employeeName);
+                                                              .OfType<VehicleReservation>()
+                                                              .Count(x => x.EmployeeName == employeeName);
 
             return totalEmployeeReservations > 4;
         }

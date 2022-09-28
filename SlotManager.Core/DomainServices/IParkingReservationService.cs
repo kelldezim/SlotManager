@@ -1,10 +1,5 @@
 ﻿using SlotManager.Core.Entities;
 using SlotManager.Core.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SlotManager.Core.DomainServices
 {
@@ -13,6 +8,8 @@ namespace SlotManager.Core.DomainServices
         void ReserveSpotForVehicle(IEnumerable<WeeklyParkingSpot> allParkingSpots,
                                     JobTitle jobTitle,
                                     WeeklyParkingSpot weeklyParkingSpotToReserve,
-                                    Reservation reservation);
+                                    VehicleReservation reservation);
+        void ReserveParkingForCleaning(IEnumerable<WeeklyParkingSpot> allParkingSpots,
+                                    Date date);
     }
 }

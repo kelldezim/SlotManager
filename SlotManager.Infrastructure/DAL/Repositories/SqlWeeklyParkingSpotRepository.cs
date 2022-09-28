@@ -44,9 +44,20 @@ namespace SlotManager.Infrastructure.DAL.Repositories
 
         public async Task<IEnumerable<WeeklyParkingSpot>> GetByWeekAsync(Week week)
         {
+            //var spots = await _dbContext.WeeklyParkingSpots
+            //                .Include(x => x.Reservations)
+            //                //.Where(x => x.Week == week)
+            //                .ToListAsync();
+            //var spot = spots.FirstOrDefault(x => x.Name == "P1");
+
+            //if(spot.Week == week)
+            //{
+
+            //}
+
             var result = await _dbContext.WeeklyParkingSpots
                             .Include(x => x.Reservations)
-                            .Where(x => x.Week == week)
+                            .Where(x => x.Week.To == week.To)
                             .ToListAsync();
 
             return result.AsEnumerable();

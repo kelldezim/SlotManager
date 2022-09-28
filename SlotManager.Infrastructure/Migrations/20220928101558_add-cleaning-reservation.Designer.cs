@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SlotManager.Infrastructure.DAL;
 
@@ -11,9 +12,10 @@ using SlotManager.Infrastructure.DAL;
 namespace SlotManager.Infrastructure.Migrations
 {
     [DbContext(typeof(SlotManagerDbContext))]
-    partial class SlotManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220928101558_add-cleaning-reservation")]
+    partial class addcleaningreservation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

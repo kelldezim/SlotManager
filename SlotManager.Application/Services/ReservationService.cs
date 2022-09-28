@@ -39,12 +39,12 @@ namespace SlotManager.Application.Services
                 {
                     Id = x.Id,
                     ParkingSpotId = x.ParkingSpotId,
-                    EmployeeName = x.EmployeeName,
+                    EmployeeName = x is VehicleReservation vr ? vr.EmployeeName : String.Empty,
                     Date = x.Date.Value.Date
                 });
         }
 
-        public async Task<Guid?> CreateAsync(CreateReservation command)
+        public async Task<Guid?> ReserveForVehicleAsync(ReserveParkingSpotForVehicle command)
         {
             var parkingSpotId = new ParkingSpotId(command.ParkingSpotId);
             var week = new Week(_clock.Current());
@@ -57,11 +57,12 @@ namespace SlotManager.Application.Services
                 return default;
             }
 
-            var reservation = new Reservation(command.ReservationId,
+            var reservation = new VehicleReservation(command.ReservationId,
                                               command.ParkingSpotId,
+                                              new Date(command.Date),
                                               command.EmployeeName,
-                                              command.LicensePlate,
-                                              new Date(command.Date));
+                                              command.LicensePlate
+                                              );
 
             _parkingReservationService.ReserveSpotForVehicle(weeklyParkingSpots, JobTitle.Employee, parkingSpotToReserve, reservation);
 
@@ -70,7 +71,7 @@ namespace SlotManager.Application.Services
             return reservation.Id;
         }
 
-        public async Task<bool> UpdateAsync(ChangeReservationLicensePlate command)
+        public async Task<bool> ChangeReservationLicencePlateAsync(ChangeReservationLicensePlate command)
         {
             var weeklyParkingSpot = await GetWeeklyParkingSpotByReservationAsync(command.ReservationId);
 
@@ -80,7 +81,9 @@ namespace SlotManager.Application.Services
             }
 
             var reservationId = new ReservationId(command.ReservationId);
-            var existingReservation = weeklyParkingSpot.Reservations.SingleOrDefault(x => x.Id == reservationId);
+            var existingReservation = weeklyParkingSpot.Reservations
+                                                        .OfType<VehicleReservation>()
+                                                        .SingleOrDefault(x => x.Id == reservationId);
 
             if (existingReservation is null)
             {
@@ -126,6 +129,22 @@ namespace SlotManager.Application.Services
             var weeklyParkingSpots = await _weeklyParkingSpotRepository.GetAllAsync();
 
             return weeklyParkingSpots.SingleOrDefault(x => x.Reservations.Any(r => r.Id == reservationId));
+        }
+
+        public async Task ReserveForCleaningAsync(ReserveParkingSpotForCleaning command)
+        {
+            var week = new Week(command.Date);
+            var weeklyParkingSpots = (await _weeklyParkingSpotRepository.GetByWeekAsync(week)).ToList();
+
+            _parkingReservationService.ReserveParkingForCleaning(weeklyParkingSpots, new Date(command.Date));
+
+            //var tasks = weeklyParkingSpots.Select(x => _weeklyParkingSpotRepository.UpdateAsync());
+            //await Task.WhenAll(tasks);
+
+            foreach(var parkingSpot in weeklyParkingSpots)
+            {
+                await _weeklyParkingSpotRepository.UpdateAsync(parkingSpot);
+            }
         }
     }
 }

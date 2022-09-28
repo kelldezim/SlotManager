@@ -17,10 +17,22 @@ namespace SlotManager.Core.DomainServices
             _clock = clock;
         }
 
+        public void ReserveParkingForCleaning(IEnumerable<WeeklyParkingSpot> allParkingSpots, Date date)
+        {
+            foreach(var parkingSpot in allParkingSpots)
+            {
+                var reservationsForSameDate = parkingSpot.Reservations.Where(x => x.Date == date);
+                parkingSpot.RemoveReservations(reservationsForSameDate);
+
+                var cleaningReservation = new CleaningReservation(ReservationId.Create(), parkingSpot.Id, date);
+                parkingSpot.AddReservation(cleaningReservation, new Date(_clock.Current()));
+            }
+        }
+
         public void ReserveSpotForVehicle(IEnumerable<WeeklyParkingSpot> allParkingSpots, 
                                           JobTitle jobTitle, 
                                           WeeklyParkingSpot weeklyParkingSpotToReserve, 
-                                          Reservation reservation)
+                                          VehicleReservation reservation)
         {
             var parkingSpotId = weeklyParkingSpotToReserve.Id;
             var policy = _reservationPolicies.SingleOrDefault(x => x.CanBeApplied(jobTitle));
